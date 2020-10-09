@@ -3,7 +3,7 @@ const DB = require('../../common/db');
 const getAll = async () => DB.getAllUsers();
 
 const getById = async id => {
-  const user = await DB.getUserById(id);
+  const user = DB.getUserById(id);
 
   if (!user) {
     throw new Error(`The user with ${id} was not found`);
@@ -15,7 +15,7 @@ const getById = async id => {
 const create = async user => DB.createUser(user);
 
 const deleteById = async id => {
-  const user = await DB.deleteUser(id);
+  const user = DB.deleteUser(id);
 
   if (!user) {
     throw new Error(`The user with ${id} was not found`);
@@ -25,7 +25,7 @@ const deleteById = async id => {
 };
 
 const update = async (id, updatedUserData) => {
-  const updatedUser = await DB.updateUser(id, updatedUserData);
+  const updatedUser = DB.updateUser(id, updatedUserData);
 
   if (!updatedUser) {
     throw new Error(`The user with ${id} was not found`);

@@ -30,7 +30,7 @@ router.route('/').post(async (req, res) => {
 router.route('/:id').delete(async (req, res) => {
   try {
     await usersService.deleteById(req.params.id);
-    res.status(204);
+    res.status(204).send();
   } catch (e) {
     res.status(404).send(e.message);
   }
