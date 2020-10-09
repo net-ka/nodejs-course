@@ -2,6 +2,7 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
+
 const userRouter = require('./resources/users/user.router');
 
 const app = express();
@@ -20,5 +21,11 @@ app.use('/', (req, res, next) => {
 });
 
 app.use('/users', userRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+  next();
+});
 
 module.exports = app;
