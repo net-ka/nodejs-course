@@ -1,8 +1,10 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
+const Task = require('../resources/tasks/task.model');
 
 const DBUsers = [];
 const DBBoards = [];
+const DBTasks = [];
 
 (() => {
   for (let i = 0; i < 3; i++) {
@@ -10,9 +12,27 @@ const DBBoards = [];
   }
 })();
 
+// (() => {
+//   for (let i = 0; i < 2; i++) {
+//     DBBoards.push(new Board({ id: "1a" }));
+//   }
+// })();
+
+// (() => {
+//   for (let i = 0; i < 2; i++) {
+//     DBTasks.push(new Task({ boardId: "1a" }));
+//   }
+// })();
+
 (() => {
   for (let i = 0; i < 2; i++) {
     DBBoards.push(new Board());
+  }
+})();
+
+(() => {
+  for (let i = 0; i < 2; i++) {
+    DBTasks.push(new Task());
   }
 })();
 
@@ -34,6 +54,12 @@ const createUser = async user => {
 const deleteUser = async id => {
   const index = DBUsers.findIndex(user => user.id === id);
   DBUsers.splice(index, 1);
+
+  DBTasks.forEach(task => {
+    if (task.userId === id) {
+      task.userId = null;
+    }
+  });
 
   return DBUsers;
 };
@@ -64,24 +90,100 @@ const deleteBoard = async id => {
   const index = DBBoards.findIndex(board => board.id === id);
   DBBoards.splice(index, 1);
 
+  const tasksForDelete = DBTasks.map(task => {
+    if (task.boardId === id) {
+      return task.id;
+    }
+  });
+
+  tasksForDelete.forEach(taskId => {
+    deleteTask(taskId);
+  });
+
   return DBBoards;
 };
 
 const updateBoard = async (id, updatedBoardData) => {
   const index = DBBoards.findIndex(board => board.id === id);
 
-  const updatedBoard = {
-    id: DBBoards[index].id,
-    title: updatedBoardData.title,
-    columns: updatedBoardData.columns
-  };
+  const updatedBoard = { id, ...updatedBoardData };
 
   DBBoards[index] = updatedBoard;
 
   return getBoardById(id);
 };
 
+// tasks
+
+const getAllTasksByBoard = async boardId => {
+  return DBTasks.filter(task => task.boardId === boardId);
+};
+
+const getTaskById = async id => {
+  return DBTasks.find(task => task.id === id);
+};
+
+const createTaskByBoard = async task => {
+  DBTasks.push(task);
+
+  return getTaskById(task.id);
+};
+
+const deleteTask = async id => {
+  const index = DBTasks.findIndex(task => task.id === id);
+  DBTasks.splice(index, 1);
+
+  return DBTasks;
+};
+
+const updateTask = async (id, updatedTaskData) => {
+  const index = DBTasks.findIndex(task => task.id === id);
+
+  const updatedTask = { id, ...updatedTaskData };
+
+  DBTasks[index] = updatedTask;
+
+  return getTaskById(id);
+};
+
+// general
+
+// const getAllEntity = async DB => {
+//   return DB;
+// };
+
+// const getEntityById = async (DB, id) => {
+//   return DB.find(item => item.id === id);
+// };
+
+// const createEntity = async (DB, item) => {
+//   DB.push(item);
+//   return getEntityById(item.id);
+// };
+
+// const deleteEntity = async (DB, id) => {
+//   const index = DB.findIndex(item => item.id === id);
+//   DB.splice(index, 1);
+
+//   return DB;
+// };
+
+// const updateEntity = async (DB, id, updatedUserData) => {
+//   const index = DB.findIndex(item => item.id === id);
+//   DB[index] = { id, ...updatedUserData };
+
+//   return getEntityById(id);
+// };
+
 module.exports = {
+  // getAllEntity,
+  // getEntityById,
+  // createEntity,
+  // deleteEntity,
+  // updateEntity,
+  // DBUsers,
+  // DBBoards,
+
   getAllUsers,
   getUserById,
   createUser,
@@ -92,5 +194,11 @@ module.exports = {
   getBoardById,
   createBoard,
   updateBoard,
-  deleteBoard
+  deleteBoard,
+
+  getAllTasksByBoard,
+  getTaskById,
+  createTaskByBoard,
+  deleteTask,
+  updateTask
 };
