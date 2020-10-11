@@ -9,38 +9,9 @@ const DBTasks = [];
 (() => {
   for (let i = 0; i < 3; i++) {
     DBUsers.push(new User());
-  }
-})();
-
-// (() => {
-//   for (let i = 0; i < 2; i++) {
-//     DBBoards.push(new Board({ id: "1a" }));
-//   }
-// })();
-
-// (() => {
-//   for (let i = 0; i < 2; i++) {
-//     DBTasks.push(new Task({ boardId: "1a" }));
-//   }
-// })();
-
-(() => {
-  for (let i = 0; i < 3; i++) {
     DBBoards.push(new Board());
+    DBTasks.push(new Task());
   }
-})();
-
-// (() => {
-//   for (let i = 0; i < 2; i++) {
-//     DBTasks.push(new Task());
-//   }
-// })();
-
-(() => {
-  DBUsers.forEach((user, i) => {
-    const boardId = DBBoards[i].id;
-    DBTasks.push(new Task({ boardId, userId: user.id }));
-  });
 })();
 
 // users
@@ -168,44 +139,7 @@ const updateTask = async (id, updatedTaskData) => {
   return getTaskById(id);
 };
 
-// general
-
-// const getAllEntity = async DB => {
-//   return DB;
-// };
-
-// const getEntityById = async (DB, id) => {
-//   return DB.find(item => item.id === id);
-// };
-
-// const createEntity = async (DB, item) => {
-//   DB.push(item);
-//   return getEntityById(item.id);
-// };
-
-// const deleteEntity = async (DB, id) => {
-//   const index = DB.findIndex(item => item.id === id);
-//   DB.splice(index, 1);
-
-//   return DB;
-// };
-
-// const updateEntity = async (DB, id, updatedUserData) => {
-//   const index = DB.findIndex(item => item.id === id);
-//   DB[index] = { id, ...updatedUserData };
-
-//   return getEntityById(id);
-// };
-
 module.exports = {
-  // getAllEntity,
-  // getEntityById,
-  // createEntity,
-  // deleteEntity,
-  // updateEntity,
-  // DBUsers,
-  // DBBoards,
-
   getAllUsers,
   getUserById,
   createUser,
