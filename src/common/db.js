@@ -25,15 +25,22 @@ const DBTasks = [];
 // })();
 
 (() => {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 3; i++) {
     DBBoards.push(new Board());
   }
 })();
 
+// (() => {
+//   for (let i = 0; i < 2; i++) {
+//     DBTasks.push(new Task());
+//   }
+// })();
+
 (() => {
-  for (let i = 0; i < 2; i++) {
-    DBTasks.push(new Task());
-  }
+  DBUsers.forEach((user, i) => {
+    const boardId = DBBoards[i].id;
+    DBTasks.push(new Task({ boardId, userId: user.id }));
+  });
 })();
 
 // users
@@ -53,15 +60,20 @@ const createUser = async user => {
 
 const deleteUser = async id => {
   const index = DBUsers.findIndex(user => user.id === id);
-  DBUsers.splice(index, 1);
 
-  DBTasks.forEach(task => {
-    if (task.userId === id) {
-      task.userId = null;
-    }
-  });
+  if (index >= 0) {
+    const deletedUser = DBUsers.splice(index, 1);
 
-  return DBUsers;
+    DBTasks.forEach(task => {
+      if (task.userId === id) {
+        task.userId = null;
+      }
+    });
+
+    return deletedUser;
+  }
+
+  return null;
 };
 
 const updateUser = async (id, updatedUserData) => {
@@ -88,19 +100,24 @@ const createBoard = async board => {
 
 const deleteBoard = async id => {
   const index = DBBoards.findIndex(board => board.id === id);
-  DBBoards.splice(index, 1);
 
-  const tasksForDelete = DBTasks.map(task => {
-    if (task.boardId === id) {
-      return task.id;
-    }
-  });
+  if (index >= 0) {
+    const deletedBoard = DBBoards.splice(index, 1);
 
-  tasksForDelete.forEach(taskId => {
-    deleteTask(taskId);
-  });
+    const tasksForDelete = DBTasks.map(task => {
+      if (task.boardId === id) {
+        return task.id;
+      }
+    });
 
-  return DBBoards;
+    tasksForDelete.forEach(taskId => {
+      deleteTask(taskId);
+    });
+
+    return deletedBoard;
+  }
+
+  return null;
 };
 
 const updateBoard = async (id, updatedBoardData) => {
@@ -131,9 +148,14 @@ const createTaskByBoard = async task => {
 
 const deleteTask = async id => {
   const index = DBTasks.findIndex(task => task.id === id);
-  DBTasks.splice(index, 1);
 
-  return DBTasks;
+  if (index >= 0) {
+    const deletedTask = DBTasks.splice(index, 1);
+
+    return deletedTask;
+  }
+
+  return null;
 };
 
 const updateTask = async (id, updatedTaskData) => {
