@@ -1,5 +1,4 @@
 const User = require('../../resources/users/user.model');
-const DBTasks = require('./DBTasks');
 
 const DBUsers = [];
 
@@ -27,8 +26,6 @@ const deleteUser = async id => {
 
   if (index >= 0) {
     const deletedUser = DBUsers.splice(index, 1);
-
-    await DBTasks.changeUserIdToNull(id);
 
     return deletedUser;
   }

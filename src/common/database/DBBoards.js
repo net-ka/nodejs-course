@@ -1,5 +1,4 @@
 const Board = require('../../resources/boards/board.model');
-const DBTasks = require('./DBTasks');
 
 const DBBoards = [];
 
@@ -27,8 +26,6 @@ const deleteBoard = async id => {
 
   if (index >= 0) {
     const deletedBoard = DBBoards.splice(index, 1);
-
-    await DBTasks.deleteTasksForDeletedBoard(id);
 
     return deletedBoard;
   }
