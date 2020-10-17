@@ -30,15 +30,12 @@ router.route('/').post(
   })
 );
 
-router.route('/:id').delete(async (req, res) => {
-  try {
+router.route('/:id').delete(
+  asyncErrorHandler(async (req, res) => {
     await boardsService.deleteById(req.params.id);
-
     res.status(204).send();
-  } catch (e) {
-    res.status(404).send(e.message);
-  }
-});
+  })
+);
 
 router.route('/:id').put(
   asyncErrorHandler(async (req, res) => {

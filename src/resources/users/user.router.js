@@ -20,19 +20,16 @@ router.route('/:id').get(
 router.route('/').post(
   asyncErrorHandler(async (req, res) => {
     const user = await usersService.create(new User({ ...req.body }));
-
     res.json(User.toResponse(user));
   })
 );
 
-router.route('/:id').delete(async (req, res) => {
-  try {
+router.route('/:id').delete(
+  asyncErrorHandler(async (req, res) => {
     await usersService.deleteById(req.params.id);
     res.status(204).send();
-  } catch (e) {
-    res.status(404).send(e.message);
-  }
-});
+  })
+);
 
 router.route('/:id').put(
   asyncErrorHandler(async (req, res) => {

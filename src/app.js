@@ -7,7 +7,7 @@ const chalk = require('chalk');
 const { handleAppError } = require('./errorHandlers/appError');
 
 const {
-  // loggerConsole,
+  loggerConsole,
   loggerFile,
   loggerErrorsFile
 } = require('./logger/logger');
@@ -21,7 +21,7 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 app.use(express.json());
 
-// app.use(loggerConsole);
+app.use(loggerConsole);
 app.use(loggerFile);
 app.use(loggerErrorsFile);
 

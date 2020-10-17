@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 
 const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, 'access.log'),
+  path.join(__dirname, 'requests.log'),
   { flags: 'a' }
 );
 

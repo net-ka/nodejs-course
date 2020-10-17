@@ -2,7 +2,7 @@ const DB = require('../../common/database/DBTasks');
 const { AppError } = require('../../errorHandlers/appError');
 
 const getAllByBoard = async boardId => {
-  const tasks = DB.getAllTasksByBoard(boardId);
+  const tasks = await DB.getAllTasksByBoard(boardId);
 
   if (!tasks) {
     throw new AppError(404, 'The tasks were not found');
@@ -12,7 +12,7 @@ const getAllByBoard = async boardId => {
 };
 
 const getById = async id => {
-  const task = DB.getTaskById(id);
+  const task = await DB.getTaskById(id);
 
   if (!task) {
     throw new AppError(404, `The task with ${id} was not found`);
@@ -22,7 +22,7 @@ const getById = async id => {
 };
 
 const create = async task => {
-  const newTask = DB.createTaskByBoard(task);
+  const newTask = await DB.createTaskByBoard(task);
 
   if (!newTask) {
     throw new AppError(404, 'The task was not created');
@@ -32,17 +32,15 @@ const create = async task => {
 };
 
 const deleteById = async id => {
-  const task = DB.deleteTask(id);
+  const task = await DB.deleteTask(id);
 
   if (!task) {
     throw new AppError(404, `The task with ${id} was not found`);
   }
-
-  // return task;
 };
 
 const update = async (id, updatedTaskData) => {
-  const updatedTask = DB.updateTask(id, updatedTaskData);
+  const updatedTask = await DB.updateTask(id, updatedTaskData);
 
   if (!updatedTask) {
     throw new AppError(404, `The task with ${id} was not found`);

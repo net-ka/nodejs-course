@@ -3,7 +3,7 @@ const DBTasks = require('../../common/database/DBTasks');
 const { AppError } = require('../../errorHandlers/appError');
 
 const getAll = async () => {
-  const boards = DB.getAllBoards();
+  const boards = await DB.getAllBoards();
 
   if (!boards) {
     throw new AppError(404, 'The boards were not found');
@@ -13,7 +13,7 @@ const getAll = async () => {
 };
 
 const getById = async id => {
-  const board = DB.getBoardById(id);
+  const board = await DB.getBoardById(id);
 
   if (!board) {
     throw new AppError(404, `The board with ${id} was not found`);
@@ -23,7 +23,7 @@ const getById = async id => {
 };
 
 const create = async board => {
-  const newBoard = DB.createBoard(board);
+  const newBoard = await DB.createBoard(board);
 
   if (!newBoard) {
     throw new AppError(404, 'The board was not created');
@@ -40,12 +40,10 @@ const deleteById = async id => {
   }
 
   await DBTasks.deleteTasksForDeletedBoard(id);
-
-  // return board;
 };
 
 const update = async (id, updatedBoardData) => {
-  const updatedBoard = DB.updateBoard(id, updatedBoardData);
+  const updatedBoard = await DB.updateBoard(id, updatedBoardData);
 
   if (!updatedBoard) {
     throw new AppError(404, `The board with ${id} was not found`);

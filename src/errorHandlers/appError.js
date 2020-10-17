@@ -1,5 +1,5 @@
 class AppError extends Error {
-  constructor(status, message = 'Not found') {
+  constructor(status, message) {
     super(message);
 
     this.status = status;
@@ -14,7 +14,7 @@ const handleAppError = (err, req, res, next) => {
       status,
       message
     });
-  } else if (err) {
+  } else {
     res.status(500).send('Internal server error');
   }
 

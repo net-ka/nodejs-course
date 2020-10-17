@@ -30,14 +30,12 @@ router.route('/').post(
   })
 );
 
-router.route('/:taskId').delete(async (req, res) => {
-  try {
+router.route('/:taskId').delete(
+  asyncErrorHandler(async (req, res) => {
     await tasksService.deleteById(req.params.taskId);
     res.status(204).send();
-  } catch (e) {
-    res.status(404).send(e.message);
-  }
-});
+  })
+);
 
 router.route('/:taskId').put(
   asyncErrorHandler(async (req, res) => {
