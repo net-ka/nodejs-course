@@ -1,6 +1,7 @@
 const path = require('path');
 const morgan = require('morgan');
 const fs = require('fs');
+const chalk = require('chalk');
 
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'requests.log'),
@@ -52,8 +53,14 @@ const loggerErrorsFile = morgan(
   }
 );
 
+const loggerUnexpectedErrors = (title, msg) => {
+  console.log(chalk.red.bold(title));
+  console.error(msg);
+};
+
 module.exports = {
   loggerConsole,
   loggerFile,
-  loggerErrorsFile
+  loggerErrorsFile,
+  loggerUnexpectedErrors
 };

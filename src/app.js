@@ -2,14 +2,14 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
-const chalk = require('chalk');
 
 const { handleAppError } = require('./errorHandlers/appError');
 
 const {
   loggerConsole,
   loggerFile,
-  loggerErrorsFile
+  loggerErrorsFile,
+  loggerUnexpectedErrors
 } = require('./logger/logger');
 
 const userRouter = require('./resources/users/user.router');
@@ -41,19 +41,22 @@ app.use('/boards/:boardId/tasks', taskRouter);
 
 app.use(handleAppError);
 
-process.on('unhandledRejection', reason => {
-  console.log(chalk.red.bold('[PROCESS] Unhandled Promise Rejection'));
-  console.log(chalk.red.bold('======================'));
-  console.log(reason);
-  console.log(chalk.red.bold('======================'));
-});
-
-process.on('uncaughtException', err => {
-  console.log(chalk.red.bold('[PROCESS] Uncaught Exception'));
-  console.log(chalk.red.bold('======================'));
-  console.log(chalk.redBright('Error:', err.message));
-  console.log(chalk.red.bold('======================'));
-});
+process
+  .on('unhandledRejection', (reason, promise) => {
+    loggerUnexpectedErrors(
+      '[PROCESS] Unhandled Promise Rejection',
+      `Unhandled Rejection at: ${promise}\n` + `Reason: ${reason}`
+    );
+    // eslint-disable-next-line no-process-exit
+    process.exit(1);
+  })
+  .on('uncaughtException', (err, origin) => {
+    loggerUnexpectedErrors(
+      '[PROCESS] Uncaught Exception',
+      `Caught exception: ${err}\n` + `Exception origin: ${origin}`
+    );
+    throw new Error();
+  });
 
 // throw Error('Oops!');
 // Promise.reject(Error('Oops!'));
