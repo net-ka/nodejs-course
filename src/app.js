@@ -12,6 +12,9 @@ const {
   loggerUnexpectedErrors
 } = require('./logger/logger');
 
+const checkToken = require('./resources/auth/utils/checkToken');
+
+const authRouter = require('./resources/auth/auth.router');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
@@ -35,9 +38,10 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
-app.use('/boards/:boardId/tasks', taskRouter);
+app.use('/login', authRouter);
+app.use('/users', checkToken, userRouter);
+app.use('/boards', checkToken, boardRouter);
+app.use('/boards/:boardId/tasks', checkToken, taskRouter);
 
 app.use(handleAppError);
 
